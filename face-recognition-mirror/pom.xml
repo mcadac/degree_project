@@ -15,7 +15,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.0.1.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> 
 	</parent>
 
 	<properties>
@@ -31,20 +31,44 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.7</version>
+		</dependency>
+
+		<!-- Opencv local dependecy, It is load from opencv-lib folder of project -->
+		<dependency>
+			<groupId>org.opencv</groupId>
+			<artifactId>opencv</artifactId>
+			<version>341</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/opencv-lib/opencv-341.jar</systemPath>
+		</dependency>
+		
+		<!-- Libraries for unit test -->
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
 
+	
 	<build>
 		<plugins>
+		
+			<!-- This plugin sets "java.library.path" variable -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<jvmArguments>
+						-Djava.library.path=${basedir}/opencv-lib/
+					</jvmArguments>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-
 
 </project>
