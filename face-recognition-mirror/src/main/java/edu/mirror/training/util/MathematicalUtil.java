@@ -1,6 +1,5 @@
 package edu.mirror.training.util;
 
-import org.apache.commons.lang3.Validate;
 import org.opencv.core.Mat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,7 +90,7 @@ public final class MathematicalUtil {
 	 * @param mat2 {@link Mat}
 	 * @return  similarity in percentage
 	 */
-	public static float compareMatDif(final Mat mat1, final Mat mat2) {
+	public static float similarityMatDif(final Mat mat1, final Mat mat2) {
 		
 		if (mat1 != null && mat2 != null && !mat1.size().equals(mat2.size())) {
 			LOGGER.warn("Please validate params supplied because those has a different size or are null");
@@ -141,31 +140,30 @@ public final class MathematicalUtil {
 
 	}
 
+	
+	
 
-	private static float getSimilarity(float similarity) {
-		if (similarity > 50) {
-			
-			similarity = similarity - 50;
-			
-		} else {
-			
-			similarity = 50 - similarity;
-		}
-		return similarity;
-	}
+	/**
+	 * Calculates to medial mat, return a new {@link Mat}
+	 *  
+	 * @param mat
+	 * @return {@link Mat}
+	 */
+	public static Mat toMedialMat(final Mat mat) {
+		
+		final Mat mat2 = new Mat(mat.size(), mat.type());
 
-	public static Mat toMedialMat(Mat mat) {
-		Mat mat2 = new Mat(mat.size(), mat.type());
-
-		int rows = mat.rows();
-		int cols = mat.cols();
+		final int rows = mat.rows();
+		final int cols = mat.cols();
 
 		double sumOfPixelByColInRow = 0;
 
 		for (int x = 0; x < rows; x++) {
+			
 			double sumOfPixelByRow = 0;
 
 			for (int y = 0; y < cols; y++) {
+				
 				sumOfPixelByRow = sumOfPixelByRow + mat.get(x, y)[0];
 			}
 
@@ -178,11 +176,14 @@ public final class MathematicalUtil {
 		int perfectMediumPixel = 255 / 2;
 
 		for (int x = 0; x < rows; x++) {
+			
 			for (int y = 0; y < cols; y++) {
-				double pixelValue = (int) mat.get(x, y)[0];
+				
+				final double pixelValue = (int) mat.get(x, y)[0];
 				double mediumValue = (int) (pixelValue * perfectMediumPixel / mediumPixel);
 
 				if (mediumValue > 255) {
+					
 					mediumValue = 255;
 				}
 
@@ -191,6 +192,18 @@ public final class MathematicalUtil {
 		}
 
 		return mat2;
+	}
+	
+	
+	/**
+	 * Gets similarity percentage 
+	 * 
+	 * @param similarity
+	 * @return
+	 */
+	private static float getSimilarity(final float similarity) {
+	
+		return similarity > 50 ? similarity - 50 : 50 - similarity;
 	}
 
 
