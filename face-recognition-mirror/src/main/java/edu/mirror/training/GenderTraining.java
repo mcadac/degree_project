@@ -1,6 +1,7 @@
 package edu.mirror.training;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +9,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Component;
 
 import edu.mirror.api.ITraining;
 
@@ -18,6 +22,7 @@ import edu.mirror.api.ITraining;
  * @author Camilo Espitia - dcespitiam@unipanamericana.edu.co
  * @version 1.0
  */
+@Component
 public class GenderTraining implements ITraining {
 
 	/** Logger */
@@ -27,6 +32,9 @@ public class GenderTraining implements ITraining {
 	@Value("{trained.data.path}")
 	private String trainedDataPath;
 	
+	/** Resource loader*/
+	@Autowired
+	private ResourceLoader resourceLoader;
 	
 	
 	/*
@@ -34,7 +42,7 @@ public class GenderTraining implements ITraining {
 	 * @see edu.mirror.api.ITraining#train(java.lang.String)
 	 */
 	@Override
-	public boolean train(final String path) {
+	public boolean train(final String path) throws IOException {
 		
 		final Map<Integer, String> filesAbsolutePaths = getFilesPath( getSubFolders(path) );
 		
@@ -50,12 +58,14 @@ public class GenderTraining implements ITraining {
 	 * 
 	 * @param path 
 	 * @return {@link File} array
+	 * @throws IOException 
 	 */
-	private File[] getSubFolders(final String path) {
+	private File[] getSubFolders(final String path) throws IOException {
 		
-		Validate.isTrue( StringUtils.isBlank(path), "The training path cannot be null");
+		Validate.isTrue( StringUtils.isNotBlank(path), "The training path cannot be null");
 		
-		final File dataFolder = new File(path);
+		LOGGER.info(resourceLoader.getResource("classpath:" + path).getFilename());
+		final File dataFolder = resourceLoader.getResource("classpath:" + path).getFile();
 
 		return dataFolder.listFiles((current, name) -> new File(current, name).isDirectory());
 	}

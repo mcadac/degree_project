@@ -1,9 +1,11 @@
 package edu.mirror;
 
+import org.apache.commons.lang3.Validate;
 import org.opencv.core.Core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,6 +24,10 @@ public class FaceRecognitionMirrorApplication implements CommandLineRunner {
 	/** Logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(FaceRecognitionMirrorApplication.class);
 
+	/** Training files path*/
+	@Value("${training.files.path}")
+	private String trainingFilesPath;
+	
 	/**
 	 * Main service of the component. 
 	 * This service is the input point to all the Face recognition mirror capabilities
@@ -55,6 +61,10 @@ public class FaceRecognitionMirrorApplication implements CommandLineRunner {
 		try {
 			
 			faceRecognitionService.enableCamera();
+			LOGGER.info("TRaining ---> " + trainingFilesPath);
+			
+			Validate.isTrue( faceRecognitionService.trainGender(trainingFilesPath), "Gender training was not successfully");
+			
 			faceRecognitionService.doFaceRecognition();
 			
 		} catch (final Exception exception) {

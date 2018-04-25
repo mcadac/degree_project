@@ -14,6 +14,6 @@ public interface ITraining {
 	 * @param path
 	 * @return true if the training was successful
 	 */
-	boolean train(final String path);
+	boolean train(final String path) throws Exception;
 	
 }

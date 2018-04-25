@@ -29,7 +29,7 @@ public interface IFaceRecognitionService {
 	 * @param trainingFilesPath {@link String}
 	 * @return true if the training process was successful
 	 */
-	boolean trainGender(String trainingFilesPath);
+	boolean trainGender(String trainingFilesPath) throws Exception;
 
 	
 }

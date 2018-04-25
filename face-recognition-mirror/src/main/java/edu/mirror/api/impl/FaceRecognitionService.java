@@ -77,7 +77,7 @@ public class FaceRecognitionService implements IFaceRecognitionService {
 	 * @see edu.mirror.api.IFaceRecognitionService#trainGender(java.lang.String)
 	 */
 	@Override
-	public boolean trainGender(final String trainingFilesPath) {
+	public boolean trainGender(final String trainingFilesPath) throws Exception {
 		
 		return genderTraining.train(trainingFilesPath);
 		

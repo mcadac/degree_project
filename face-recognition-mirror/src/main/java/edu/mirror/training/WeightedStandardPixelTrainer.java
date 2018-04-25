@@ -77,7 +77,7 @@ public class WeightedStandardPixelTrainer {
 	 */
 	public void train(final Map<Integer, String> imageFilesPath) {
 		
-		Validate.isTrue(CollectionUtils.isEmpty(imageFilesPath), "Images files path is empty");
+		Validate.isTrue( !CollectionUtils.isEmpty(imageFilesPath), "Images files path is empty");
 		final Integer[] idsArray = (Integer[]) imageFilesPath.keySet().toArray();
 
 		final int[] variety = appendVarietyOf(idsArray);
