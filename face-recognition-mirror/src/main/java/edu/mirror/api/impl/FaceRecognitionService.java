@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import edu.mirror.api.ICameraController;
 import edu.mirror.api.IFaceRecognitionService;
+import edu.mirror.api.ITraining;
 
 /**
  * Implementation of {@link IFaceRecognitionService}
@@ -24,8 +25,13 @@ public class FaceRecognitionService implements IFaceRecognitionService {
 	/** Logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(FaceRecognitionService.class);
 	
+	/** Camera controller */
 	@Autowired
 	private ICameraController cameraController;
+	
+	/** Gender training */
+	@Autowired
+	private ITraining genderTraining;
 	
 	/*
 	 * (non-Javadoc)
@@ -62,6 +68,18 @@ public class FaceRecognitionService implements IFaceRecognitionService {
 	public void disableCamera() {
 		
 		cameraController.stop();
+		
+	}
+
+	
+	/*
+	 * (non-Javadoc)
+	 * @see edu.mirror.api.IFaceRecognitionService#trainGender(java.lang.String)
+	 */
+	@Override
+	public boolean trainGender(final String trainingFilesPath) {
+		
+		return genderTraining.train(trainingFilesPath);
 		
 	}
 

@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import edu.mirror.api.ITraining;
 
@@ -22,6 +23,12 @@ public class GenderTraining implements ITraining {
 	/** Logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(GenderTraining.class);
 	
+	/** Trained data path */
+	@Value("{trained.data.path}")
+	private String trainedDataPath;
+	
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * @see edu.mirror.api.ITraining#train(java.lang.String)
@@ -31,7 +38,11 @@ public class GenderTraining implements ITraining {
 		
 		final Map<Integer, String> filesAbsolutePaths = getFilesPath( getSubFolders(path) );
 		
-		return false;
+		final WeightedStandardPixelTrainer weightedStandardPixelTrainer = new WeightedStandardPixelTrainer();
+		weightedStandardPixelTrainer.train(filesAbsolutePaths);
+		
+		return weightedStandardPixelTrainer.saveTrainedData(trainedDataPath);
+		
 	}
 
 	/**

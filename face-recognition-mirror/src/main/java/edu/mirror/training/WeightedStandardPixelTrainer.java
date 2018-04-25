@@ -1,5 +1,6 @@
 package edu.mirror.training;
 
+import static edu.mirror.training.util.MathematicalUtil.similarityMatdiv;
 import static edu.mirror.training.util.MathematicalUtil.similarityMatDif;
 import static edu.mirror.training.util.MathematicalUtil.toMedialMat;
 import static edu.mirror.training.util.FaceRecognitionHelper.COMMA;
@@ -7,6 +8,7 @@ import static edu.mirror.training.util.FaceRecognitionHelper.LINE_BREAK;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -271,10 +273,16 @@ public class WeightedStandardPixelTrainer {
 		return fileData.toString();
 	}
 
+	
+	
 	/**
 	 * Returns predicted type on trained set, or -1 if not recognized.
+	 * 
+	 * @param inputMat {@link Mat}
+	 * @return int
 	 */
 	public int predict(Mat inputMat) {
+		
 		int id = -1;
 		float similarity = 0;
 
@@ -284,16 +292,19 @@ public class WeightedStandardPixelTrainer {
 		int types = trainedWeightedData.getTypes();
 
 		for (int i = 0; i < types; i++) {
-			float currentSimilarity =
-				compareMatDiv(trainedWeightedData.getStandardImage(i), inputMat) +
+			
+			final float currentSimilarity = similarityMatdiv(trainedWeightedData.getStandardImage(i), inputMat) +
 				similarityMatDif(trainedWeightedData.getStandardImage(i), inputMat);
 
 			if (currentSimilarity > similarity) {
+				
 				similarity = currentSimilarity;
 				id = trainedWeightedData.getId(i);
+				
 			}
 		}
 
+		
 		if (similarity < 20) {
 			return -1;
 		}
@@ -301,6 +312,25 @@ public class WeightedStandardPixelTrainer {
 		return id;
 	}
 
+	/**
+	 * Saves trained data
+	 * 
+	 * @return true if it saved data
+	 */
+	public boolean saveTrainedData(final String trainedDataPath){
+		
+		try {
+			
+			trainedWeightedData.saveTrainedData(trainedDataPath);
+			LOGGER.info("Trained data saved successfully in {}", trainedDataPath);
+			return true;
+		
+		} catch (final IOException exception) {
+			
+			LOGGER.error("It cannot save trained data in {} ", trainedDataPath, exception);
+			return false;
+		}
+	}
 
 
 }

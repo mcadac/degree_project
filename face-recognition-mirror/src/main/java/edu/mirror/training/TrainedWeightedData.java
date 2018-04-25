@@ -252,6 +252,17 @@ public class TrainedWeightedData {
 
 	
 	/**
+	 * Gets a specific standard image
+	 * 
+	 * @param index {@link Integer}
+	 * @return {@link Mat}
+	 */
+	public Mat getStandardImage(final int index) {
+		return standardImages[index];
+	}
+	
+	
+	/**
 	 * Get standard image
 	 * 
 	 * @param index int

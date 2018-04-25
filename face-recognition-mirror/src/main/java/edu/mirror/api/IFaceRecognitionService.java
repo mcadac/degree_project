@@ -22,6 +22,14 @@ public interface IFaceRecognitionService {
 	 * Disable camera
 	 */
 	void disableCamera();
+	
+	/**
+	 * To train system to recognition gender
+	 * 
+	 * @param trainingFilesPath {@link String}
+	 * @return true if the training process was successful
+	 */
+	boolean trainGender(String trainingFilesPath);
 
 	
 }
