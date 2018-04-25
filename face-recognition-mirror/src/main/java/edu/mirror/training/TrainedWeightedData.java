@@ -228,5 +228,83 @@ public class TrainedWeightedData {
 	public void addId(final int index, final int newId){
 		ids[index] = newId;
 	}
+	
+	/**
+	 * Gets a specific id
+	 * 
+	 * @param index 
+	 * @return int
+	 */
+	public int getId(final int index) {
+		return ids[index];
+	}
+	
+	/**
+	 * Gets specific weight
+	 * 
+	 * @param index int
+	 * @return int 
+	 */
+	public int getWeight(int index) {
+		
+		return weights[index];
+	}
+
+	
+	/**
+	 * Get standard image
+	 * 
+	 * @param index int
+	 * @param Mat's row int
+	 * @param Mat's col int
+	 * @return int
+	 */
+	public int getStandardImage(final int index, final int row, final int col) {
+		
+		if (index < types && row < size.width && col < size.height) {
+			
+			return (int) standardImages[index].get(row, col)[0];
+			
+		}
+		return 0;
+	}
+
+	/**
+	 * Sets standard image
+	 * 
+	 * @param index
+	 * @param row
+	 * @param col
+	 * @param pixel
+	 */
+	public void setStandardImage(final int index, final int row, final int col, final int pixel) {
+		
+		standardImages[index].put(row, col, pixel);
+		
+	}
+	
+	
+	/**
+	 * Increment a specific  weight
+	 *  
+	 * @param index int
+	 */
+	public void incrementWeight(final int index) {
+		
+		weights[index]++;
+		
+	}
+	
+	/**
+	 * sets a weight in an array
+	 * 
+	 * @param index int
+	 * @param weight int
+	 */
+	public void setWeight(int index, int weight) {
+		
+		weights[index] = weight;
+	}
+	
 
 }

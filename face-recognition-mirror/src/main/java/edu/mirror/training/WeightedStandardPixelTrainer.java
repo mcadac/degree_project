@@ -1,12 +1,12 @@
 package edu.mirror.training;
 
 import static edu.mirror.training.util.MathematicalUtil.similarityMatDif;
-import static edu.mirror.training.util.MathematicalUtil.similarityMatdiv;
 import static edu.mirror.training.util.MathematicalUtil.toMedialMat;
+import static edu.mirror.training.util.FaceRecognitionHelper.COMMA;
+import static edu.mirror.training.util.FaceRecognitionHelper.LINE_BREAK;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -76,9 +76,9 @@ public class WeightedStandardPixelTrainer {
 	public void train(final Map<Integer, String> imageFilesPath) {
 		
 		Validate.isTrue(CollectionUtils.isEmpty(imageFilesPath), "Images files path is empty");
-		
+		final Integer[] idsArray = (Integer[]) imageFilesPath.keySet().toArray();
 
-		final int[] variety = appendVarietyOf(imageFilesPath.keySet());
+		final int[] variety = appendVarietyOf(idsArray);
 		final int types = variety[variety.length - 1];
 		
 		final int standardImageRow = (int) imageSize.width, standardImageCol = (int) imageSize.height;
@@ -100,17 +100,19 @@ public class WeightedStandardPixelTrainer {
 			mat = toMedialMat(mat);
 
 			for (int i = 0; i < types; i++) {
-				if (trainedWeightedData.getId(i) == ids[index]) {
+				
+				if (trainedWeightedData.getId(i) == idsArray[index]) {
 					typeNo = i;
 					break;
 				}
+				
 			}
 
 			for (int row = 0; row < standardImageRow; row++) {
+				
 				for (int col = 0; col < standardImageCol; col++) {
-					double sumValue = (trainedWeightedData.getStandardImage(typeNo, row, col) *
-						trainedWeightedData.getWeight(typeNo)) +
-						mat.get(row, col)[0];
+					
+					double sumValue = (trainedWeightedData.getStandardImage(typeNo, row, col) * trainedWeightedData.getWeight(typeNo)) + mat.get(row, col)[0];
 
 					int value = (int) sumValue / (trainedWeightedData.getWeight(typeNo) + 1);
 
@@ -132,18 +134,17 @@ public class WeightedStandardPixelTrainer {
 	 * @param imagesIds - {@link Set}
 	 * @return Array with int values
 	 */
-	private int[] appendVarietyOf(final Set<Integer> imagesIds) {
+	private int[] appendVarietyOf(final Integer[] imagesIds) {
 		
-		final Integer[] idsArray = (Integer[]) imagesIds.toArray();
 		
-		final int length = idsArray.length;
-		final int[] result = new int[idsArray.length + 1];
+		final int length = imagesIds.length;
+		final int[] result = new int[imagesIds.length + 1];
 
 		int variety = 0;
 
 		for (int i = 0; i < length; i++) {
 			
-			result[i] = idsArray[i];
+			result[i] = imagesIds[i];
 			boolean flagMatched = false;
 
 			for (int j = 0; j < variety; j++) {
@@ -169,33 +170,39 @@ public class WeightedStandardPixelTrainer {
 		return result;
 	}
 
+	
+	
 	/**
 	 * Loads previously prepared training data.
+	 * 
+	 * @param filePath {@link String}
 	 */
-	public void loadTrainedData(String filePath) {
-		String mainString = readFile(filePath);
+	public void loadTrainedData(final String filePath) {
+		
+		final String mainString = readFile(filePath);
 
-		int startIndex, stopIndex;
+		int startIndex; 
+		int stopIndex;
 		String key;
 
 		// total image types
 		key = "types:";
 		startIndex = mainString.indexOf(key, 0);
-		stopIndex = mainString.indexOf("\n", startIndex);
-		int types = Integer.parseInt(mainString.substring(startIndex + key.length(), stopIndex));
+		stopIndex = mainString.indexOf(LINE_BREAK, startIndex);
+		final int types = Integer.parseInt(mainString.substring(startIndex + key.length(), stopIndex));
 
 		// image size
 		key = "size:";
 		startIndex = mainString.indexOf(key, stopIndex);
-		stopIndex = mainString.indexOf(",", startIndex);
-		int width = Integer.parseInt(mainString.substring(startIndex + key.length(), stopIndex));
+		stopIndex = mainString.indexOf(COMMA, startIndex);
+		final int width = Integer.parseInt(mainString.substring(startIndex + key.length(), stopIndex));
 
 		startIndex = stopIndex + 1;
-		stopIndex = mainString.indexOf("\n", startIndex);
-		int height = Integer.parseInt(mainString.substring(startIndex, stopIndex));
+		stopIndex = mainString.indexOf(LINE_BREAK, startIndex);
+		final int height = Integer.parseInt(mainString.substring(startIndex, stopIndex));
 
 		imageSize = new Size(width, height);
-		WeightedStandardImages weightedStandardImages = new WeightedStandardImages(types, imageSize);
+		final TrainedWeightedData trainedWeightedData = new TrainedWeightedData(types, imageSize);
 
 		stopIndex = mainString.indexOf("data\n", stopIndex);
 		for (int i = 0; i < types; i++) {
@@ -203,16 +210,16 @@ public class WeightedStandardPixelTrainer {
 			// image id
 			key = "id:";
 			startIndex = mainString.indexOf(key, stopIndex);
-			stopIndex = mainString.indexOf("\n", startIndex);
+			stopIndex = mainString.indexOf(LINE_BREAK, startIndex);
 			int id = Integer.parseInt(mainString.substring(startIndex + key.length(), stopIndex));
-			weightedStandardImages.setId(i, id);
+			trainedWeightedData.addId(i, id);
 
 			// image weight
 			key = "weight:";
 			startIndex = mainString.indexOf(key, stopIndex);
-			stopIndex = mainString.indexOf("\n", startIndex);
+			stopIndex = mainString.indexOf(LINE_BREAK, startIndex);
 			int weight = Integer.parseInt(mainString.substring(startIndex + key.length(), stopIndex));
-			weightedStandardImages.setWeight(i, weight);
+			trainedWeightedData.setWeight(i, weight);
 
 			key = "image\n";
 			startIndex = mainString.indexOf(key, stopIndex);
@@ -223,33 +230,42 @@ public class WeightedStandardPixelTrainer {
 					// standard image data
 
 					startIndex = stopIndex + 1;
-					stopIndex = mainString.indexOf(',', startIndex);
+					stopIndex = mainString.indexOf(COMMA, startIndex);
 
 					int pixel = Integer.parseInt(mainString.substring(startIndex, stopIndex));
-					weightedStandardImages.setStandardImage(i, row, col, pixel);
+					trainedWeightedData.setStandardImage(i, row, col, pixel);
 				}
 				stopIndex++;
 			}
 		}
 
-		this.trainedWeightedData = weightedStandardImages;
+		this.trainedWeightedData = trainedWeightedData;
 	}
 
+	/**
+	 * Reads file from file path supplied
+	 * 
+	 * @param filePath {@link String}
+	 * @return {@link String} file as {@link String}
+	 */
 	private String readFile(String filePath) {
-		StringBuilder fileData = new StringBuilder();
+		
+		final StringBuilder fileData = new StringBuilder();
 
-		try {
-			BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
+		try ( final BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
+			
 			String tempString = bufferedReader.readLine();
 
 			while (tempString != null) {
+				
 				fileData.append(tempString).append("\n");
 				tempString = bufferedReader.readLine();
+				
 			}
 
-			bufferedReader.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (final Exception exception) {
+			
+			LOGGER.error("Exception reading trained file!");
 		}
 
 		return fileData.toString();
