@@ -29,8 +29,12 @@ public class GenderTraining implements ITraining {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GenderTraining.class);
 	
 	/** Trained data path */
-	@Value("{trained.data.path}")
+	@Value("${trained.data.path}")
 	private String trainedDataPath;
+	
+	/** Trained data file name*/
+	@Value("${trained.data.file}")
+	private String trainedDataFile;
 	
 	/** Resource loader*/
 	@Autowired
@@ -49,7 +53,7 @@ public class GenderTraining implements ITraining {
 		final WeightedStandardPixelTrainer weightedStandardPixelTrainer = new WeightedStandardPixelTrainer();
 		weightedStandardPixelTrainer.train(filesAbsolutePaths);
 		
-		return weightedStandardPixelTrainer.saveTrainedData(trainedDataPath);
+		return weightedStandardPixelTrainer.saveTrainedData(trainedDataPath + trainedDataFile);
 		
 	}
 
@@ -100,9 +104,9 @@ public class GenderTraining implements ITraining {
 			for (final File file : files) {
 				
 				filesAbsolutePaths.put( Integer.valueOf(fileId), file.getAbsolutePath());
+				fileId ++;
 			}
-	
-			fileId ++;
+			
 		}
 		
 		return filesAbsolutePaths;

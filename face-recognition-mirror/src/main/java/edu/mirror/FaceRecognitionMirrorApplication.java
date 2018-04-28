@@ -61,8 +61,8 @@ public class FaceRecognitionMirrorApplication implements CommandLineRunner {
 		try {
 			
 			faceRecognitionService.enableCamera();
-			LOGGER.info("TRaining ---> " + trainingFilesPath);
 			
+			LOGGER.info("Training ---> " + trainingFilesPath);
 			Validate.isTrue( faceRecognitionService.trainGender(trainingFilesPath), "Gender training was not successfully");
 			
 			faceRecognitionService.doFaceRecognition();
