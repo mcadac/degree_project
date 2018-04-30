@@ -1,5 +1,7 @@
 package edu.mirror.training.util;
 
+import org.springframework.core.io.Resource;
+
 /**
  * Helper class with constants and common methods
  * 
@@ -13,6 +15,9 @@ public final class FaceRecognitionHelper {
 	
 	/** Comma constant */
 	public static final String COMMA = ",";
+	
+	/** Classpath to be used by {@link Resource}*/
+	public static final String CLASSPATH = "classpath:";
 	
 	/**
 	 * Private constructor for not create an object

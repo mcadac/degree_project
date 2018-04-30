@@ -1,16 +1,22 @@
 package edu.mirror.training;
 
+import static edu.mirror.training.util.FaceRecognitionHelper.CLASSPATH;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
@@ -32,13 +38,13 @@ public class GenderTraining implements ITraining {
 	@Value("${trained.data.path}")
 	private String trainedDataPath;
 	
-	/** Trained data file name*/
-	@Value("${trained.data.file}")
-	private String trainedDataFile;
-	
 	/** Resource loader*/
 	@Autowired
 	private ResourceLoader resourceLoader;
+	
+	/** Class to train the system */
+	@Autowired
+	private WeightedStandardPixelTrainer weightedStandardPixelTrainer;
 	
 	
 	/*
@@ -48,12 +54,9 @@ public class GenderTraining implements ITraining {
 	@Override
 	public boolean train(final String path) throws IOException {
 		
-		final Map<Integer, String> filesAbsolutePaths = getFilesPath( getSubFolders(path) );
-		
-		final WeightedStandardPixelTrainer weightedStandardPixelTrainer = new WeightedStandardPixelTrainer();
+		final Pair<Integer[], String[]> filesAbsolutePaths = getFilesPath( getSubFolders(path) );
 		weightedStandardPixelTrainer.train(filesAbsolutePaths);
-		
-		return weightedStandardPixelTrainer.saveTrainedData(trainedDataPath + trainedDataFile);
+		return weightedStandardPixelTrainer.saveTrainedData(trainedDataPath);
 		
 	}
 
@@ -67,9 +70,10 @@ public class GenderTraining implements ITraining {
 	private File[] getSubFolders(final String path) throws IOException {
 		
 		Validate.isTrue( StringUtils.isNotBlank(path), "The training path cannot be null");
+		final Resource folderResource = resourceLoader.getResource(CLASSPATH + path);
 		
-		LOGGER.info(resourceLoader.getResource("classpath:" + path).getFilename());
-		final File dataFolder = resourceLoader.getResource("classpath:" + path).getFile();
+		LOGGER.info(folderResource.getFilename());
+		final File dataFolder = folderResource.getFile();
 
 		return dataFolder.listFiles((current, name) -> new File(current, name).isDirectory());
 	}
@@ -81,13 +85,14 @@ public class GenderTraining implements ITraining {
 	 * @param subFolders {@link File} array
 	 * @return {@link Map} with an id and Absolute path
 	 */
-	private Map<Integer, String> getFilesPath(final File[] subFolders){
+	private Pair<Integer[], String[]> getFilesPath(final File[] subFolders){
 		
 		if (subFolders == null){
 			throw new IllegalArgumentException("Training sub folder is null");
 		}
 		
-		final Map<Integer, String> filesAbsolutePaths = new HashMap<>();
+		final ArrayList<String> filePathList = new ArrayList<>();
+		final ArrayList<Integer> idList = new ArrayList<>();
 
 		int fileId = 0;
 		
@@ -103,13 +108,21 @@ public class GenderTraining implements ITraining {
 			
 			for (final File file : files) {
 				
-				filesAbsolutePaths.put( Integer.valueOf(fileId), file.getAbsolutePath());
-				fileId ++;
+				filePathList.add(file.getAbsolutePath());
+				idList.add(fileId);
 			}
 			
+			fileId ++;
+			
 		}
+
+		String[] filePaths = new String[filePathList.size()];
+		filePathList.toArray(filePaths);
+
+		Integer[] ids = new Integer[idList.size()];
+		idList.toArray(ids);
 		
-		return filesAbsolutePaths;
+		return new ImmutablePair<Integer[], String[]>(ids, filePaths);
 	}
 
 }

@@ -1,25 +1,25 @@
 package edu.mirror.training;
 
-import static edu.mirror.training.util.MathematicalUtil.similarityMatdiv;
-import static edu.mirror.training.util.MathematicalUtil.similarityMatDif;
-import static edu.mirror.training.util.MathematicalUtil.toMedialMat;
 import static edu.mirror.training.util.FaceRecognitionHelper.COMMA;
 import static edu.mirror.training.util.FaceRecognitionHelper.LINE_BREAK;
+import static edu.mirror.training.util.MathematicalUtil.similarityMatDif;
+import static edu.mirror.training.util.MathematicalUtil.similarityMatdiv;
+import static edu.mirror.training.util.MathematicalUtil.toMedialMat;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.tuple.Pair;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -30,6 +30,7 @@ import org.springframework.util.CollectionUtils;
  * @version 1.0
  *
  */
+@Component
 public class WeightedStandardPixelTrainer {
 
 	/** Logger */
@@ -75,15 +76,14 @@ public class WeightedStandardPixelTrainer {
 	 * @param imageFilePaths
 	 * @param ids
 	 */
-	public void train(final Map<Integer, String> imageFilesPath) {
+	public void train(final Pair<Integer[], String[]> imageFilesPath) {
 		
-		Validate.isTrue( !CollectionUtils.isEmpty(imageFilesPath), "Images files path is empty");
-		final Set<Integer> imagesId = imageFilesPath.keySet();
+		Validate.notNull(imageFilesPath, "Images files path is empty");
+		final Integer[] imagesId = imageFilesPath.getKey();
 		
-		LOGGER.info("Size is {}", imagesId.size());
-		final Integer[] idsArray = (Integer[]) imagesId.toArray(new Integer [imagesId.size()]);
+		LOGGER.info("Size is {}", imagesId.length);
 
-		final int[] variety = appendVarietyOf(idsArray);
+		final int[] variety = appendVarietyOf(imagesId);
 		final int types = variety[variety.length - 1];
 		
 		final int standardImageRow = (int) imageSize.width, standardImageCol = (int) imageSize.height;
@@ -98,7 +98,7 @@ public class WeightedStandardPixelTrainer {
 		int typeNo = 0; 
 		int index = 0;
 		
-		for (final String imageFilePath : imageFilesPath.values()) {
+		for (final String imageFilePath : imageFilesPath.getValue()) {
 			
 			Mat mat = Imgcodecs.imread(imageFilePath, Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE);
 			Imgproc.resize(mat, mat, imageSize);
@@ -106,7 +106,7 @@ public class WeightedStandardPixelTrainer {
 
 			for (int i = 0; i < types; i++) {
 				
-				if (trainedWeightedData.getId(i) == idsArray[index]) {
+				if (trainedWeightedData.getId(i) == imagesId[index]) {
 					typeNo = i;
 					break;
 				}

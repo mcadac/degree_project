@@ -78,7 +78,7 @@ public class CameraController implements ICameraController {
 		final Mat matFrame = new Mat();
 		videoCapture.read(matFrame);
 
-		return Optional.ofNullable(matFrame);
+		return Optional.of(matFrame);
 	}
 
 
