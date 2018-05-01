@@ -1,5 +1,9 @@
 package edu.mirror;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.lang3.Validate;
 import org.opencv.core.Core;
 import org.slf4j.Logger;
@@ -35,6 +39,9 @@ public class FaceRecognitionMirrorApplication implements CommandLineRunner {
 	@Autowired
 	private IFaceRecognitionService faceRecognitionService;
 	
+	/** A timer for acquiring the video stream */
+	private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+	
 
 	/**
 	 * <ul>Main method used by Spring boot to start application.
@@ -61,11 +68,10 @@ public class FaceRecognitionMirrorApplication implements CommandLineRunner {
 		try {
 			
 			faceRecognitionService.enableCamera();
-			
-			LOGGER.info("Training ---> " + trainingFilesPath);
 			Validate.isTrue( faceRecognitionService.trainGender(trainingFilesPath), "Gender training was not successfully");
+			scheduledExecutorService.scheduleAtFixedRate( () -> faceRecognitionService.doFaceRecognition(), 0, 1, TimeUnit.SECONDS);
+			Thread.currentThread().join();
 			
-			faceRecognitionService.doFaceRecognition();
 			
 		} catch (final Exception exception) {
 			

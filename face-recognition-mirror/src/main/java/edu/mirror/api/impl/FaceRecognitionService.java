@@ -2,6 +2,7 @@ package edu.mirror.api.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ScheduledExecutorService;
 
 import org.apache.commons.lang3.Validate;
 import org.opencv.core.Mat;
@@ -45,6 +46,7 @@ public class FaceRecognitionService implements IFaceRecognitionService {
 	/** Face recognition */
 	@Autowired
 	private FaceRecognition faceRecognition;
+	 
 	
 	/*
 	 * (non-Javadoc)
@@ -63,18 +65,18 @@ public class FaceRecognitionService implements IFaceRecognitionService {
 	 */
 	@Override
 	public void doFaceRecognition() {
-		
+
 		Validate.isTrue(cameraController.isOpened(), "The camera is not enable");
+
 		final Optional<Mat> matFrameOptional = cameraController.readFrame();
-		
-		if(matFrameOptional.isPresent()){
-			
+
+		if (matFrameOptional.isPresent()) {
+
 			final Mat matFrame = matFrameOptional.get();
 			LOGGER.info("The frame reading was successful {}", matFrame);
 			doFaceDetection(matFrame);
-			
+
 		}
-		
 	}
 
 	/*
@@ -96,6 +98,7 @@ public class FaceRecognitionService implements IFaceRecognitionService {
 	@Override
 	public boolean trainGender(final String trainingFilesPath) throws Exception {
 		
+		LOGGER.info("Traigning with files from : {}", trainingFilesPath);
 		final boolean isTrained =  genderTraining.train(trainingFilesPath);
 		faceRecognition.train();
 		return isTrained;
@@ -103,47 +106,48 @@ public class FaceRecognitionService implements IFaceRecognitionService {
 	}
 
 	
-	private void doFaceDetection(final Mat frame){
-		
+	private void doFaceDetection(final Mat frame) {
+
 		List<Rect> faces = faceDetector.detectFace(frame);
 
 		faces.forEach(face -> {
 
 			final Rect cropFace = new Rect(face.x, face.y, face.width, face.height);
-
 			final Mat cropedFace = new Mat(frame, cropFace);
-
 			final Optional<Person> optional = faceRecognition.matchFace(cropedFace);
 
-			if(optional.isPresent()){
+			if (optional.isPresent()) {
 				final Person personRecognized = optional.get();
-//				User.findUserById(optional.getLabel(), user -> {
-//					Imgproc.rectangle(frame, face.tl(), face.br(), COLOR_SUCCESS, 2);
-//	
-//					Imgproc.rectangle(frame,
-//						new Point(face.x, face.y + face.height),
-//						new Point(face.x + face.width, face.y + face.height + 34),
-//						COLOR_SUCCESS, -1);
-//	
-//					String text = user.name();
-//					switch (recognizedUser.getGenederType()) {
-//						case 0: text += " (Mujer)"; break;
-//						case 1: text += " (Hombre)"; break;
-//					}
-//	
-//					Imgproc.putText(frame, text,
-//						new Point(face.x + 10, face.y + face.height + 24),
-//						Core.FONT_HERSHEY_PLAIN, 2,
-//						COLOR_TEXT, 2);
-//				}, () ->
-//					Imgproc.rectangle(frame, face.tl(), face.br(), COLOR_UNRECOGNIZED, 4)
-//				);
-				
-				LOGGER.info("Person recognized {}", personRecognized.getGenderType());
+				// User.findUserById(optional.getLabel(), user -> {
+				// Imgproc.rectangle(frame, face.tl(), face.br(), COLOR_SUCCESS,
+				// 2);
+				//
+				// Imgproc.rectangle(frame,
+				// new Point(face.x, face.y + face.height),
+				// new Point(face.x + face.width, face.y + face.height + 34),
+				// COLOR_SUCCESS, -1);
+				//
+				// String text = user.name();
+				// switch (recognizedUser.getGenederType()) {
+				// case 0: text += " (Mujer)"; break;
+				// case 1: text += " (Hombre)"; break;
+				// }
+				//
+				// Imgproc.putText(frame, text,
+				// new Point(face.x + 10, face.y + face.height + 24),
+				// Core.FONT_HERSHEY_PLAIN, 2,
+				// COLOR_TEXT, 2);
+				// }, () ->
+				// Imgproc.rectangle(frame, face.tl(), face.br(),
+				// COLOR_UNRECOGNIZED, 4)
+				// );
+
+				LOGGER.info("Person recognized : {}", personRecognized.getGenderType());
+			} else {
+				LOGGER.warn("Person not recognized");
 			}
 
 		});
-	
-		
+
 	}
 }
