@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
 import edu.mirror.api.IFaceRecognitionService;
 
@@ -18,7 +19,8 @@ import edu.mirror.api.IFaceRecognitionService;
  * @author Camilo Espitia - dcespitiam@unipanamericana.edu.co
  * @version 1.0
  */
-@SpringBootApplication
+@Configuration
+@ComponentScan(basePackages = "edu.mirror")
 public class FaceRecognitionMirrorApplication implements CommandLineRunner {
 
 	/** Logger */
@@ -84,4 +86,5 @@ public class FaceRecognitionMirrorApplication implements CommandLineRunner {
 			
 		}		
 	}
+	
 }
