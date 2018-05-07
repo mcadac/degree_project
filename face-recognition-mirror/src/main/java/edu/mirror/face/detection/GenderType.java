@@ -11,10 +11,18 @@ import java.util.Optional;
 public enum GenderType {
 
 	/** The person is a woman*/
-	WOMAN,
+	WOMAN(0),
 	
 	/** The person is a man*/
-	MAN;
+	MAN(1);
+	
+	/** Gender type id*/
+	private int id;
+	
+	/** Constructor */
+	private GenderType(final int id) {
+		this.id = id;
+	}
 	
 	/**
 	 * Gets a {@link GenderType} using its ordinal value
@@ -26,7 +34,7 @@ public enum GenderType {
 		
 		for(final GenderType genderType : GenderType.values()){
 			
-			if(genderType.ordinal() == value){
+			if(genderType.getId() == value){
 				return Optional.of(genderType);
 			}
 			
@@ -35,4 +43,28 @@ public enum GenderType {
 		return Optional.empty();
 	}
 	
+	/**
+	 * Get gender
+	 * 
+	 * @param genderName
+	 * @return null if not exist
+	 */
+	public static GenderType valueOfFromString(final String genderName){
+		
+		try{
+			return genderName != null ? GenderType.valueOf(genderName.toUpperCase()) : null;
+		} catch (final Exception e) {
+			return null;
+		}
+	}
+	
+	/**
+	 * Get gender type id
+	 * 
+	 * @return int
+	 */
+	public int getId() {
+		return id;
+	}
+
 }

@@ -1,9 +1,5 @@
 package edu.mirror;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.lang3.Validate;
 import org.opencv.core.Core;
 import org.slf4j.Logger;
@@ -39,8 +35,11 @@ public class FaceRecognitionMirrorApplication implements CommandLineRunner {
 	@Autowired
 	private IFaceRecognitionService faceRecognitionService;
 	
-	/** A timer for acquiring the video stream */
-	private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+	/** Load opencv libraries */
+	static{
+		LOGGER.info("Lib path configurated: {}", System.getProperty("java.library.path"));
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+	}
 	
 
 	/**
@@ -51,9 +50,6 @@ public class FaceRecognitionMirrorApplication implements CommandLineRunner {
 	 * @param args 
 	 */
 	public static void main(final String[] args) {
-
-		LOGGER.info("Lib path configurated: {}", System.getProperty("java.library.path"));
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		SpringApplication.run(FaceRecognitionMirrorApplication.class, args);
 	}
 
@@ -62,16 +58,21 @@ public class FaceRecognitionMirrorApplication implements CommandLineRunner {
 	 * (non-Javadoc)
 	 * @see org.springframework.boot.CommandLineRunner#run(java.lang.String[])
 	 */
+	@SuppressWarnings("static-access")
 	@Override
 	public void run(final String... args) throws Exception {
 	
 		try {
 			
+			final Thread currentThread = Thread.currentThread();
+			
 			faceRecognitionService.enableCamera();
 			Validate.isTrue( faceRecognitionService.trainGender(trainingFilesPath), "Gender training was not successfully");
-			scheduledExecutorService.scheduleAtFixedRate( () -> faceRecognitionService.doFaceRecognition(), 0, 1, TimeUnit.SECONDS);
-			Thread.currentThread().join();
 			
+			while(true){
+				faceRecognitionService.doFaceRecognition();
+				currentThread.sleep(10000);
+			}
 			
 		} catch (final Exception exception) {
 			

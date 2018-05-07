@@ -1,11 +1,10 @@
 package edu.mirror.training;
 
 import static edu.mirror.training.util.FaceRecognitionHelper.CLASSPATH;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +20,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 import edu.mirror.api.ITraining;
+import edu.mirror.face.detection.GenderType;
 
 /**
  * Class to train the system by gender
@@ -94,25 +94,28 @@ public class GenderTraining implements ITraining {
 		final ArrayList<String> filePathList = new ArrayList<>();
 		final ArrayList<Integer> idList = new ArrayList<>();
 
-		int fileId = 0;
 		
 		for (final File subfolder : subFolders) {
 			
-			LOGGER.info("File id : {} = {}", fileId, subfolder.getName());
+			final GenderType genderFolder = GenderType.valueOfFromString(subfolder.getName());
 			
-			final File[] files = subfolder.listFiles();
-			
-			if (files == null) {
-				continue;
-			}
-			
-			for (final File file : files) {
+			if (genderFolder != null){
 				
-				filePathList.add(file.getAbsolutePath());
-				idList.add(fileId);
+				LOGGER.info("File id : {} = {}", genderFolder.getId(), subfolder.getName());
+				
+				final File[] files = subfolder.listFiles();
+				
+				if (files == null) {
+					continue;
+				}
+				
+				for (final File file : files) {
+					
+					filePathList.add(file.getAbsolutePath());
+					idList.add(genderFolder.getId());
+				}
+				
 			}
-			
-			fileId ++;
 			
 		}
 
