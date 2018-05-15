@@ -73,7 +73,7 @@ public class FaceRecognitionService implements IFaceRecognitionService {
 		if (matFrameOptional.isPresent()) {
 
 			final Mat matFrame = matFrameOptional.get();
-			LOGGER.info("The frame reading was successful {}", matFrame);
+			//LOGGER.info("The frame reading was successful {}", matFrame);
 			doFaceDetection(matFrame);
 
 		}

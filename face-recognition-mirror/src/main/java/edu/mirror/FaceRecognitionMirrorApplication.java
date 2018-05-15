@@ -73,7 +73,7 @@ public class FaceRecognitionMirrorApplication implements CommandLineRunner {
 			
 			while(true){
 				faceRecognitionService.doFaceRecognition();
-				currentThread.sleep(10000);
+				currentThread.sleep(2000);
 			}
 			
 		} catch (final Exception exception) {
