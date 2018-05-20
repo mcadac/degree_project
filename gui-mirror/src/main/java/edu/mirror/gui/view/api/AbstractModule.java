@@ -21,7 +21,7 @@ public abstract class AbstractModule extends JPanel implements IUpdateStrategy {
     /**
      * Called when the view is initialized
      */
-    protected void onInitialize() {
+    public void onInitialize() {
         //Default behavior
     }
 
@@ -31,6 +31,20 @@ public abstract class AbstractModule extends JPanel implements IUpdateStrategy {
      */
     @Override
     public abstract Dimension getPreferredSize();
+
+    /**
+     * Create Jpanel
+     *
+     * @return
+     */
+    public JPanel createJpanel(){
+
+        JPanel panel = new JPanel();
+        panel.setBackground(Color.BLACK);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        panel.add(Box.createHorizontalGlue());
+        return panel;
+    };
 
     /**
      *

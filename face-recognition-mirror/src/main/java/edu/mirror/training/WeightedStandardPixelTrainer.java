@@ -117,6 +117,7 @@ public class WeightedStandardPixelTrainer {
 				
 				for (int col = 0; col < standardImageCol; col++) {
 					
+					//Imagen en escalas --> azul
 					double sumValue = (trainedWeightedData.getStandardImage(typeNo, row, col) * trainedWeightedData.getWeight(typeNo)) + mat.get(row, col)[0];
 
 					int value = (int) sumValue / (trainedWeightedData.getWeight(typeNo) + 1);

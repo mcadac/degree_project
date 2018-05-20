@@ -157,13 +157,15 @@ public final class MathematicalUtil {
 		final int cols = mat.cols();
 
 		double sumOfPixelByColInRow = 0;
-
+		
+		//Toma columnas y suma pixeles
 		for (int x = 0; x < rows; x++) {
 			
 			double sumOfPixelByRow = 0;
 
 			for (int y = 0; y < cols; y++) {
 				
+				// Canal azul
 				sumOfPixelByRow = sumOfPixelByRow + mat.get(x, y)[0];
 			}
 
