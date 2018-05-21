@@ -84,27 +84,8 @@ public class FaceRecognition {
 		// experience file
 		weightedStandardPixelTrainer.loadTrainedData(trainedDataPath);
 
-
 		List<Mat> faces = new ArrayList<>();
 		List<Integer> labels = new ArrayList<>();
-
-//		users.forEach(user -> {
-//			System.out.println("\t" + user.name() + " " + user.id());
-//
-//			user.
-//				listFaceFiles()
-//				.stream()
-//				.peek(file -> System.out.println(file.getName()))
-//				.map(faceUserFile ->
-//					Imgcodecs.imread(faceUserFile.getAbsolutePath(), Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE))
-//				.peek(face ->
-//					Imgproc.resize(face, face, TRAIN_FACE_IMAGE_SIZE)
-//				)
-//				.forEach(userFaceMat -> {
-//					faces.add(userFaceMat);
-//					labels.add(user.id());
-//				});
-//		});
 
 		MatOfInt allLabels = new MatOfInt(new int[labels.size()]);
 		for (int i = 0; i < labels.size(); i++) {

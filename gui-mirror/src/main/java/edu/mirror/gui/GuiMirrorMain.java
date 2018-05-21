@@ -6,9 +6,12 @@ import edu.mirror.gui.view.api.AbstractModule;
 import edu.mirror.gui.view.api.AbstractModuleManager;
 import edu.mirror.gui.view.api.impl.manager.ClockModuleManager;
 import edu.mirror.gui.view.api.impl.manager.NewsModuleManager;
+import edu.mirror.gui.view.api.impl.manager.RecognitionModuleManager;
 import edu.mirror.gui.view.api.impl.manager.WeatherModuleManager;
 import edu.mirror.gui.view.api.impl.module.*;
 import edu.mirror.gui.view.window.MainWindow;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -26,13 +29,18 @@ import java.util.List;
  * @version 1.0
  */
 @SpringBootApplication
-public class GuiMirrorMain extends JFrame {
+public class GuiMirrorMain extends JFrame implements CommandLineRunner {
 
     /** Mirror modules */
     private static List<AbstractModule> modules;
 
     /** Mirror module managers*/
     private static List<AbstractModuleManager> managers;
+
+    /** Recognition module manager*/
+    @Autowired
+    private RecognitionModuleManager recognitionModuleManager;
+
 
 
     /**
@@ -45,6 +53,17 @@ public class GuiMirrorMain extends JFrame {
     public static void main(String... args) throws IOException, FontFormatException {
 
         SpringApplication.run(GuiMirrorMain.class,args);
+
+    }
+
+    /**
+     * Run application
+     *
+     * @param strings
+     * @throws Exception
+     */
+    @Override
+    public void run(String... strings) throws Exception {
 
         TextFonts.load();
         Icons.loadAlls();
@@ -61,19 +80,21 @@ public class GuiMirrorMain extends JFrame {
         final NewsModuleManager newsModuleManager = new NewsModuleManager(1);
         managers.add(newsModuleManager);
 
+        managers.add(recognitionModuleManager);
+
         addModule(new DateModule(), clockModuleManager);
         addModule(new WeatherModule(), weatherModuleManager);
         addModule(new WeatherForecastModule(), weatherModuleManager);
         addModule(new ClockModule(), clockModuleManager);
+        addModule(new RecognitionModule(), recognitionModuleManager);
         addModule(new NewsModule(), newsModuleManager);
 
         new MainWindow().create(modules);
         for (AbstractModuleManager m : managers) {
             m.initialize();
         }
+
     }
-
-
 
     /**
      * Add a new module

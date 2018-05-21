@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
 
+import edu.mirror.api.GuiMirrorService;
 import org.apache.commons.lang3.Validate;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
@@ -46,6 +47,10 @@ public class FaceRecognitionService implements IFaceRecognitionService {
 	/** Face recognition */
 	@Autowired
 	private FaceRecognition faceRecognition;
+
+	/** GuiMirror service*/
+	@Autowired
+	private GuiMirrorService guiMirrorService;
 	 
 	
 	/*
@@ -73,7 +78,6 @@ public class FaceRecognitionService implements IFaceRecognitionService {
 		if (matFrameOptional.isPresent()) {
 
 			final Mat matFrame = matFrameOptional.get();
-			//LOGGER.info("The frame reading was successful {}", matFrame);
 			doFaceDetection(matFrame);
 
 		}
@@ -117,32 +121,11 @@ public class FaceRecognitionService implements IFaceRecognitionService {
 			final Optional<Person> optional = faceRecognition.matchFace(cropedFace);
 
 			if (optional.isPresent()) {
-				final Person personRecognized = optional.get();
-				// User.findUserById(optional.getLabel(), user -> {
-				// Imgproc.rectangle(frame, face.tl(), face.br(), COLOR_SUCCESS,
-				// 2);
-				//
-				// Imgproc.rectangle(frame,
-				// new Point(face.x, face.y + face.height),
-				// new Point(face.x + face.width, face.y + face.height + 34),
-				// COLOR_SUCCESS, -1);
-				//
-				// String text = user.name();
-				// switch (recognizedUser.getGenederType()) {
-				// case 0: text += " (Mujer)"; break;
-				// case 1: text += " (Hombre)"; break;
-				// }
-				//
-				// Imgproc.putText(frame, text,
-				// new Point(face.x + 10, face.y + face.height + 24),
-				// Core.FONT_HERSHEY_PLAIN, 2,
-				// COLOR_TEXT, 2);
-				// }, () ->
-				// Imgproc.rectangle(frame, face.tl(), face.br(),
-				// COLOR_UNRECOGNIZED, 4)
-				// );
 
+				final Person personRecognized = optional.get();
 				LOGGER.info("Person recognized : {}", personRecognized.getGenderType());
+				guiMirrorService.notifyPersonRecognized(personRecognized.getGenderType().name());
+
 			} else {
 				LOGGER.warn("Person not recognized");
 			}

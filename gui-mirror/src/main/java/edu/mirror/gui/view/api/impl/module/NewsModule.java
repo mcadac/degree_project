@@ -38,13 +38,13 @@ public class NewsModule extends AbstractModule implements ActionListener {
     private Timer scrollTimer;
 
     /** Animarion scroll */
-    private float[] scrollPer; // to animate scrolling
+    private float[] scrollPer;
 
     /** Going left */
-    private boolean goingLeft = true; // for scrolling direction
+    private boolean goingLeft = true;
 
     /** Current news */
-    private int currentNews = 0; // current news shown
+    private int currentNews = 0;
 
     /**
      * Called when the view is initialized
