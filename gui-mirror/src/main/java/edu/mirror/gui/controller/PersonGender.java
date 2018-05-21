@@ -5,9 +5,20 @@ package edu.mirror.gui.controller;
  */
 public enum PersonGender {
 
-    MAN,
+    /** Man */
+    MAN("Hola Amigo!, ¿como estas?"),
 
-    WOMAN;
+    /** Woman */
+    WOMAN("Hola Amiga, ¿Como estas?");
+
+    /** Greeting */
+    private String greeting;
+
+    /** Constructor  */
+    private PersonGender (String greeting){
+
+        this.greeting = greeting;
+    }
 
     /**
      * Value of String
@@ -32,5 +43,15 @@ public enum PersonGender {
         return personGender;
 
     }
+
+    /**
+     * Gets greeting
+     *
+     * @return
+     */
+    public String getGreeting() {
+        return greeting;
+    }
+
 
 }

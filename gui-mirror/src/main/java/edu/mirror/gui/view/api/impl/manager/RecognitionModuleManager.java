@@ -14,7 +14,7 @@ import static edu.mirror.gui.config.Constant.EMPTY;
 public class RecognitionModuleManager extends AbstractModuleManager {
 
     /** interval change*/
-    public static final int INTERVAL_CHANGE = 20000;
+    public static final int INTERVAL_CHANGE = 15000;
 
     /** Default message*/
     private static final  String[] DEFAULT_MESSAGE = {};
@@ -67,7 +67,10 @@ public class RecognitionModuleManager extends AbstractModuleManager {
      */
     public void notifyPerson(final String[] newMessages){
 
-        messages = newMessages;
+        if (newMessages != null){
+            messages = newMessages;
+        }
+
     }
 
     /**

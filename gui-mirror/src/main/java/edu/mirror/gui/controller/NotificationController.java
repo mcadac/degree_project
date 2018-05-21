@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
+
 /**
  * Notification controller to gets information e.g face recognition component
  *
@@ -52,7 +54,25 @@ public class NotificationController {
 
         LOGGER.info("Person recognize : {}", gender);
         PersonGender personGender = PersonGender.valueOfString(gender);
-        recognitionModuleManager.notifyPerson(new String[]{personGender.name()});
+        recognitionModuleManager.notifyPerson( prepareMessage(personGender));
         return RECEIVED;
     }
+
+
+    /**
+     * Prepare message
+     *
+     * @param personGender
+     * @return
+     */
+    private String[] prepareMessage(PersonGender personGender){
+
+        if(personGender == null){
+            return null;
+        }
+
+        return new String[]{personGender.getGreeting()};
+    }
+
+
 }

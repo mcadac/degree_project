@@ -5,6 +5,7 @@ import edu.mirror.api.GuiMirrorClient;
 import edu.mirror.api.GuiMirrorService;
 import feign.Feign;
 import feign.okhttp.OkHttpClient;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -40,8 +41,14 @@ public class GuiMirrorServiceImpl implements GuiMirrorService {
     @Override
     public String notifyPersonRecognized(final String genderRecognized) {
 
-        String response = guiMirrorClient.notifyRecognition(genderRecognized);
-        LOGGER.info("Message Response : {}", response);
-        return response;
+        try {
+            String response = guiMirrorClient.notifyRecognition(genderRecognized);
+            LOGGER.info("Message Response : {}", response);
+            return response;
+        }catch (final Exception exception){
+
+            LOGGER.error("Exception sending person recognition : {} ", exception);
+            return StringUtils.EMPTY;
+        }
     }
 }
