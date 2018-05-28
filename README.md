@@ -85,7 +85,7 @@
     mvn spring-boot:run
     ```
     
-    ![Alt text](images/gui-mirror.png?raw=true "Face running")
+    ![Alt text](images/gui-mirror.png?raw=true "gui running")
 
 5. Ir al proyecto **recommendations-mirror**
 
@@ -93,6 +93,8 @@
     ```
     mvn spring-boot:run
     ```
+     
+    ![Alt text](images/recommendation.png?raw=true "recommendation running")
 
 
 
