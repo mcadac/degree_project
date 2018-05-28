@@ -19,6 +19,10 @@
     ![alt text](https://commons.apache.org/images/commons-logo.png)
 5. OpenCv 3.4
 
+    ![alt text]
+    (https://i.stack.imgur.com/ez8QV.png)
+
+
 ## Instalación y configuración
 
 1. Descargar el repositoria en un directorio.
@@ -71,6 +75,8 @@
     ```
     sh face_run.sh
     ```
+
+    ![Alt text](relative/img/face.jpg?raw=true "Title")
 
 3. Ir al proyecto **gui-mirror**
 
