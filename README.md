@@ -76,7 +76,7 @@
     sh face_run.sh
     ```
 
-    ![Alt text](images/face.png?raw=true "Title")
+    ![Alt text](images/face.png?raw=true "Face running")
 
 3. Ir al proyecto **gui-mirror**
 
@@ -84,6 +84,8 @@
     ```
     mvn spring-boot:run
     ```
+    
+    ![Alt text](images/gui-mirror.png?raw=true "Face running")
 
 5. Ir al proyecto **recommendations-mirror**
 
