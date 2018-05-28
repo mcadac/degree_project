@@ -39,7 +39,7 @@ public class RecommendationsController {
     public String recommendationsClothes(@PathVariable("gender") String gender, @PathVariable("temp") float temperature){
 
         LOGGER.info("Gender : {}, Temp : {}", gender, temperature);
-        return "message";
+        return TemperatureRank.getMessage(temperature);
     }
 
     /**

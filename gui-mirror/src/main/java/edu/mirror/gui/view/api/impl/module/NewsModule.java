@@ -102,7 +102,7 @@ public class NewsModule extends AbstractModule implements ActionListener {
                 getWidth() - hgap + x, (int)(y + DIMEN * .08f),
                 DIMEN * .6f, g2d);
 
-        g2d.setFont(TextFonts.regular.deriveFont(DIMEN * .6f));
+        g2d.setFont(TextFonts.regular.deriveFont(DIMEN * .7f));
 
         FontMetrics fm = getFontMetrics(g2d.getFont());
         int lineW = fm.stringWidth(line);
@@ -213,7 +213,7 @@ public class NewsModule extends AbstractModule implements ActionListener {
 
                     currentNews += LINE_COUNT;
 
-                    if (currentNews >= headlines.length) {
+                    if (headlines != null && currentNews >= headlines.length) {
                         currentNews = 0;
                     }
 

@@ -4,10 +4,7 @@ import edu.mirror.gui.config.Icons;
 import edu.mirror.gui.config.TextFonts;
 import edu.mirror.gui.view.api.AbstractModule;
 import edu.mirror.gui.view.api.AbstractModuleManager;
-import edu.mirror.gui.view.api.impl.manager.ClockModuleManager;
-import edu.mirror.gui.view.api.impl.manager.NewsModuleManager;
-import edu.mirror.gui.view.api.impl.manager.RecognitionModuleManager;
-import edu.mirror.gui.view.api.impl.manager.WeatherModuleManager;
+import edu.mirror.gui.view.api.impl.manager.*;
 import edu.mirror.gui.view.api.impl.module.*;
 import edu.mirror.gui.view.window.MainWindow;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +37,14 @@ public class GuiMirrorMain extends JFrame implements CommandLineRunner {
     /** Recognition module manager*/
     @Autowired
     private RecognitionModuleManager recognitionModuleManager;
+
+    /** Weather module manager */
+    @Autowired
+    private WeatherModuleManager weatherModuleManager;
+
+    /** Recommendation module manager */
+    @Autowired
+    private RecommendationModuleManager recommendationModuleManager;
 
 
 
@@ -74,19 +79,18 @@ public class GuiMirrorMain extends JFrame implements CommandLineRunner {
         final ClockModuleManager clockModuleManager = new ClockModuleManager(1);
         managers.add(clockModuleManager);
 
-        final WeatherModuleManager weatherModuleManager = new WeatherModuleManager(1);
-        managers.add(weatherModuleManager);
-
         final NewsModuleManager newsModuleManager = new NewsModuleManager(1);
         managers.add(newsModuleManager);
-
+        managers.add(weatherModuleManager);
         managers.add(recognitionModuleManager);
+        managers.add(recommendationModuleManager);
 
         addModule(new DateModule(), clockModuleManager);
         addModule(new WeatherModule(), weatherModuleManager);
         addModule(new WeatherForecastModule(), weatherModuleManager);
         addModule(new ClockModule(), clockModuleManager);
         addModule(new RecognitionModule(), recognitionModuleManager);
+        addModule(new RecommendationModule(), recommendationModuleManager);
         addModule(new NewsModule(), newsModuleManager);
 
         new MainWindow().create(modules);

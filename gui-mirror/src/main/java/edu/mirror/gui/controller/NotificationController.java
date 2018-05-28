@@ -2,6 +2,7 @@ package edu.mirror.gui.controller;
 
 import edu.mirror.gui.view.api.AbstractModuleManager;
 import edu.mirror.gui.view.api.impl.manager.RecognitionModuleManager;
+import edu.mirror.gui.view.api.impl.manager.RecommendationModuleManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,10 @@ public class NotificationController {
     @Autowired
     private RecognitionModuleManager recognitionModuleManager;
 
+    /** Recommendation module manager */
+    @Autowired
+    private RecommendationModuleManager recommendationModuleManager;
+
 
     /**
      * Gets gui mirror status
@@ -55,6 +60,8 @@ public class NotificationController {
         LOGGER.info("Person recognize : {}", gender);
         PersonGender personGender = PersonGender.valueOfString(gender);
         recognitionModuleManager.notifyPerson( prepareMessage(personGender));
+        recommendationModuleManager.setPersonGender(personGender);
+
         return RECEIVED;
     }
 

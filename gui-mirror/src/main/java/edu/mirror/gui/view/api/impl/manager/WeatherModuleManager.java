@@ -6,6 +6,8 @@ import net.aksingh.owmjapis.CurrentWeather;
 import net.aksingh.owmjapis.DailyForecast;
 import net.aksingh.owmjapis.HourlyForecast;
 import net.aksingh.owmjapis.OpenWeatherMap;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
@@ -14,6 +16,7 @@ import static edu.mirror.gui.config.Constant.EMPTY;
 /**
  * Created by McadaC on 5/19/18.
  */
+@Component
 public class WeatherModuleManager extends AbstractModuleManager {
 
     /** Api key to weather service */
@@ -40,13 +43,16 @@ public class WeatherModuleManager extends AbstractModuleManager {
     /** Hourly forecast */
     private HourlyForecast hourlyForecast;
 
+    /** Recommendations module manager */
+    @Autowired
+    private RecommendationModuleManager recommendationsModuleManager;
+
+
     /**
      * Constructor
-     *
-     * @param initModules
      */
-    public WeatherModuleManager(int initModules) {
-        super(initModules);
+    public WeatherModuleManager() {
+        super(1);
     }
 
 
@@ -57,7 +63,7 @@ public class WeatherModuleManager extends AbstractModuleManager {
      */
     @Override
     protected int getInterval() {
-        return 1000 * 1800;
+        return 1000 * 1500;
     }
 
     /**
@@ -90,7 +96,14 @@ public class WeatherModuleManager extends AbstractModuleManager {
      * @return
      */
     public float getCurrentTemp() {
-        return currentWeather.getMainInstance().getTemperature();
+
+        final float currentTemp = currentWeather.getMainInstance().getTemperature();
+
+        if(currentTemp > 0){
+            recommendationsModuleManager.setCurrentTemp(currentTemp);
+        }
+
+        return currentTemp;
     }
 
     /**

@@ -1,21 +1,36 @@
 package edu.mirror.gui.controller;
 
+import java.util.Random;
+
 /**
  * Created by McadaC on 5/20/18.
  */
 public enum PersonGender {
 
-    /** Man */
-    MAN("Hola Amigo!, ¿como estas?"),
+    /** WOMAN */
+    WOMAN(new String[]{"Hola Amiga!, ¿como estas?",
+            "Amiga mia!",
+            "Estas hermosas el día de hoy",
+            "Señorita, feliz dia!",
+            "Hola hermosa",
+            "Señorita, luces estupendo!"
+    }),
 
-    /** Woman */
-    WOMAN("Hola Amiga, ¿Como estas?");
+    /** MAN */
+    MAN(new String[]{"Hola Amigo, ¿Como estas?",
+            "Estimado Amigo",
+            "Hola caballero!",
+            "Compañero, feliz dia",
+            "Buen día amigo",
+            "Caballero, simpre tan elegante",
+            "Amigo mio!"
+    });
 
     /** Greeting */
-    private String greeting;
+    private String[] greeting;
 
     /** Constructor  */
-    private PersonGender (String greeting){
+    private PersonGender (String[] greeting){
 
         this.greeting = greeting;
     }
@@ -50,7 +65,13 @@ public enum PersonGender {
      * @return
      */
     public String getGreeting() {
-        return greeting;
+
+        final Random random = new Random();
+        int low = 0;
+        int high = this.greeting.length;
+        int result = random.nextInt(high - low) + low;
+
+        return greeting[result];
     }
 
 
