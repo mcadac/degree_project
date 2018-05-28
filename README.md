@@ -3,7 +3,12 @@
 ## Tecnologias utilizadas
 
 1. Java 8
+
+    ![alt text](https://vignette.wikia.nocookie.net/mcmodhelp/images/c/c1/Java8_logo.png/revision/latest?cb=20150425172559)
+
 2. Maven 3.3.9
+
+    ![alt text](http://programaenlinea.net/wp-content/uploads/2017/11/maven-build-manager-logo-xx-by-xx.png)
 3. Spring boot 2.0
 4. Apache common
 5. OpenCv 3.4
