@@ -95,6 +95,8 @@
     ```
      
     ![Alt text](images/recommendation.png?raw=true "recommendation running")
+    
+     ![Alt text](images/app.png?raw=true "recommendation running")
 
 
 
