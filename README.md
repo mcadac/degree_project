@@ -9,8 +9,14 @@
 2. Maven 3.3.9
 
     ![alt text](http://programaenlinea.net/wp-content/uploads/2017/11/maven-build-manager-logo-xx-by-xx.png)
+
 3. Spring boot 2.0
+
+  ![alt text](http://www.opencodez.com/wp-content/uploads/2016/09/Spring-Logo.png)
+
 4. Apache common
+    
+    ![alt text](https://commons.apache.org/images/commons-logo.png)
 5. OpenCv 3.4
 
 ## Instalación y configuración
