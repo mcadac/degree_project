@@ -76,7 +76,7 @@
     sh face_run.sh
     ```
 
-    ![Alt text](relative/img/face.jpg?raw=true "Title")
+    ![Alt text](img/face.jpg?raw=true "Title")
 
 3. Ir al proyecto **gui-mirror**
 
