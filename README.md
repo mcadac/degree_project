@@ -12,7 +12,10 @@
 
 1. Descargar el repositoria en un directorio.
 
-    - git clone https://github.com/mcadac/degree_project.git
+    ```
+
+    git clone https://github.com/mcadac/degree_project.git
+    ```
 
 2. Instalar Java 8
 
